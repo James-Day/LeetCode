@@ -2,8 +2,8 @@ class Solution {
 public:
     vector<int> intersect(vector<int>& nums1, vector<int>& nums2) {
         vector<int> ans;
-        map<int,int> lookup;
-        map<int,int> lookup2;
+        unordered_map<int,int> lookup;
+        unordered_map<int,int> lookup2;
       for(int i =0; i < nums1.size(); i++){
         lookup[nums1[i]]++;
       }
