@@ -37,3 +37,42 @@ public:
 
     }
 };
+
+/*
+//bad implementation for fun
+class Solution {
+public:
+    bool isValidBST(TreeNode* root) {
+       return isValid(root, INT_MAX, INT_MIN, false, false);
+    }
+    bool isValid(TreeNode* root, int high, int low, bool highUpdated, bool lowUpdated){
+
+        if(root == nullptr){ return true;}
+
+        if((root->left == nullptr && root->right != nullptr) && (high != INT_MAX && low != INT_MIN)){
+            if((high > root->val && low < root->val) && isValid(root->right, high, root->val, highUpdated, true)){
+                return true;
+            }
+            return false;
+        }
+        if((root->right == nullptr && root->left != nullptr) && (low != INT_MIN && high != INT_MAX)){
+            if((low < root->val) &&  (high > root->val && isValid(root->left, root->val, low, true, lowUpdated))){
+            return true;
+            }
+            return false;
+        }
+        if((low >= root->val && low != INT_MIN) || (high <= root-> val && high != INT_MAX)){
+            return false;
+        }
+        if(((low == INT_MIN && lowUpdated) && root->val == low) || ((high == INT_MAX && highUpdated)) && root->val == high){
+            return false;
+       }
+            if(isValid(root->left, root->val, low, true, lowUpdated) && isValid(root->right, high, root->val, highUpdated ,true)){
+                return true;
+            }
+        return false;
+    }
+};
+
+
+*/
