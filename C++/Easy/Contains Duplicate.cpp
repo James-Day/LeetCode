@@ -4,14 +4,14 @@ using namespace std;
 
 class Solution {
 public:
-    bool containsDuplicate(vector<int>& nums) {
-
-        unordered_map<int, int> map;
-        for (int i = 0; i < nums.size(); i++) {
-            if (map.find(nums[i]) != map.end()) {
-                return true;
+ bool containsDuplicate(vector<int>& nums) {
+        unordered_set<int> found_nums;
+        
+        for(int i = 0; i < nums.size(); i++){
+            if(found_nums.find(nums[i]) != found_nums.end()){
+                return true; //duplicate found
             }
-            map.insert({ nums[i],1 });
+                found_nums.insert(nums[i]);
         }
         return false;
     }
