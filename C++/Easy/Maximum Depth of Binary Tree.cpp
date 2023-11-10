@@ -1,4 +1,6 @@
  // Definition for a binary tree node.
+using namespace std;
+#include <algorithm>
   struct TreeNode {
       int val;
       TreeNode *left;
@@ -16,11 +18,6 @@ public:
         }
         int l = maxDepth(root->left);
         int r = maxDepth(root->right);
-        if (l > r) {
-            return l + 1;
-        }
-        else {
-            return r + 1;
-        }
+        return max(l, r) + 1;
     }
 };

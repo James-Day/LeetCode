@@ -38,6 +38,28 @@ public:
     }
 };
 
+/* DFS
+class Solution {
+public:
+    bool isValidBST(TreeNode* root) {
+        return BSTHelper(root, LONG_MAX, LONG_MIN);
+    }
+
+   bool BSTHelper(TreeNode* root, long max, long min){
+       if (root == nullptr){
+           return true;
+       }
+
+       if(root->val >= max || root->val <= min){
+           return false;
+       }
+
+       return (BSTHelper(root->left, root->val, min) && BSTHelper(root->right, max, root->val));
+   }
+};
+
+*/
+
 /*
 //bad implementation for fun
 class Solution {
