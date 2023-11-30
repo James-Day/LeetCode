@@ -1,27 +1,26 @@
 #include <vector>
 using namespace std;
-class Solution {
+class Solution
+{
 public:
-    vector<int> getSumAbsoluteDifferences(vector<int>& nums) {
+    vector<int> getSumAbsoluteDifferences(vector<int> &nums)
+    {
         vector<int> ans;
-        int totalSum = 0;
-        for (int i = 0; i < nums.size(); i++) {
-            totalSum += nums[i];
+        int leftSum = 0;
+        int rightSum = 0;
+        for (int i = 0; i < nums.size(); i++)
+        {
+            rightSum += nums[i]; // right sum will start at total sum
         }
 
-        int leftSum = 0;
-
-        for (int i = 0; i < nums.size(); i++) {
-            int leftSize = i;
-            int rightSize = nums.size() - leftSize - 1;
-            int rightSum = totalSum - leftSum - nums[i];
-
-            int curAns = (nums[i] * leftSize) - leftSum + rightSum - (nums[i] * rightSize);
-
-            ans.push_back(curAns);
+        for (int i = 0; i < nums.size(); i++)
+        {
+            rightSum -= nums[i];
+            int left = (i * nums[i]) - leftSum;
+            int right = rightSum - ((nums.size() - i - 1) * nums[i]);
+            ans.push_back(left + right);
             leftSum += nums[i];
         }
-
         return ans;
     }
 };
