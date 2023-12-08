@@ -1,6 +1,7 @@
 #include <iostream>
 #include <fstream>
 #include <string>
+
 struct numToNum {
     std::string str;
     int num;
@@ -8,6 +9,7 @@ struct numToNum {
 
 const int NUMDIGITS = 10;
 numToNum lookUp[] = {
+    {"zero", 0}, // didn't actually need 0.
     {"one", 1},
     {"two", 2},
     {"three", 3},
@@ -22,7 +24,7 @@ numToNum lookUp[] = {
 int isNum(std::string input) {
     for (int i = 0; i < NUMDIGITS; i++) {
         if (lookUp[i].str == input) {
-            return i + 1;
+            return i;
         };
     }
     return -1;
@@ -40,39 +42,34 @@ int main(int argc, char* argv[]) {
         std::cout << "Failed to open input file \n";
         exit(-1);
     }
+
     int sum = 0;
     while (std::getline(input, line)) {
         std::string leftMost = "";
         std::string rightMost = "";
         for (int i = 0; i < line.size(); i++) {
-            if (leftMost != "") break;
             if (isdigit(line[i])) {
                 leftMost += line[i];
-                break;
             }
             for (int j = 0; j < i; j++) {
                 if (isNum(line.substr(j, i - j + 1)) != -1) {
                     leftMost += std::to_string(isNum(line.substr(j, i - j + 1)));
-                    break;
                 }
             }
+            if (leftMost != "") break;
         }
 
-        std::cout << leftMost << " ";
         for (int i = line.size() - 1; i >= 0; i--) {
-            if (rightMost != "") break;
             if (isdigit(line[i])) {
                 rightMost += line[i];
-                break;
             }
             for (int j = 0; j < line.size() - i; j++) {
                 if (isNum(line.substr(i, line.size() - i - j)) != -1) {
                     rightMost += std::to_string(isNum(line.substr(i, line.size() - i - j)));
-                    break;
                 }
             }
+            if (rightMost != "") break;
         }
-        std::cout << rightMost << std::endl;
         sum += std::stoi(leftMost + rightMost);
     }
 

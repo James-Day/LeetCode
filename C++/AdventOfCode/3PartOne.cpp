@@ -6,8 +6,28 @@
 
 using namespace std;
 
-int checkSides(int i, int j, vector<string>& map) {
-   
+
+bool checkSides(int i, int j, vector<string>& map) {
+    int a = map.size(); // convert uint to int
+    for (int k = i - 1; k < a && k <= i + 1; k++) {
+        int b = map[i].size(); // convert uint to int
+
+
+        for (int p = j - 1; p < b && p <= j + 1; p++) {
+            if (k == i && p == j) {
+                continue;
+            }
+            if (k < 0 || p < 0) {
+                continue;
+            }
+            if (!isdigit(map[k][p]) && map[k][p] != '.') return true;
+        }
+    }
+    return false;
+}
+
+/*int checkSides(int i, int j, vector<string>& map) {
+
     int found = 0;
     int num1 = 0;
     int num2 = 0;
@@ -31,7 +51,7 @@ int checkSides(int i, int j, vector<string>& map) {
                     int m = p;
                     int n = p;
                     for (; m >= 0 && isdigit(map[k][m]); m--) {
-                        
+
                     }
                     for (; n <= map[k].size() && isdigit(map[k][n]); n++) {
                     }
@@ -65,57 +85,7 @@ int checkSides(int i, int j, vector<string>& map) {
     cout << "NUM 2: " << num2 << endl;
 
     return num1 * num2;
-    /*if (i + 1 < map.size() - 1) {
-        //check below
-        if (map[i+1][j] != '.' && !isdigit(map[i+1][j])) {
-            charFound = true;
-        }
-        
-        if (j - 1 >= 0) {
-            //check left 
-            if (map[i + 1][j - 1] != '.' && !isdigit(map[i + 1][j - 1])) {
-                charFound = true;
-            }
-        }
-        if (j + 1 < map[i + 1].size() - 1) {
-            //check right
-            if (map[i + 1][j + 1] != '.' && !isdigit(map[i + 1][j + 1])) {
-                charFound = true;
-            }
-        }
-    }
-    if (i - 1 >= 0 ) {
-        //check above
-        if (map[i - 1][j] != '.' && !isdigit(map[i - 1][j])) {
-            charFound = true;
-        }
-        if (j - 1 >= 0) {
-            //check left
-            if (map[i - 1][j - 1] != '.' && !isdigit(map[i - 1][j - 1])) {
-                charFound = true;
-            }
-        }
-        if (j + 1 < map[i - 1].size() - 1) {
-            //check right
-            if (map[i - 1][j + 1] != '.' && !isdigit(map[i - 1][j + 1])) {
-                charFound = true;
-            }
-        }
-    }
-    if (j + 1 < map[i].size() - 1) {
-        //check right
-        if (map[i][j + 1] != '.' && !isdigit(map[i][j + 1])) {
-            charFound = true;
-        }
-    }
-    if (j - 1 >= 0) {
-        //check left
-        if (map[i][j - 1] != '.' && !isdigit(map[i][j - 1])) {
-            charFound = true;
-        }
-    }*/
-    return false;
-}
+}*/
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
@@ -132,27 +102,29 @@ int main(int argc, char* argv[]) {
     if (!input.is_open()) {
         cout << "Failed to open input file \n";
         exit(-1);
-    }int j = 0;
+    }
+    int j = 0;
     while (getline(input, line)) {
-        string a;
-        for (int i = 0; i < line.size(); i++) {
-            a += line[i];
-        }
-        map.push_back(a);
+        map.push_back(line);
         j++;
     }
 
+    bool touchingSymbol = false;
+    string curNum = "";
     for (int i = 0; i < map.size(); i++) {
-        int mult = 0;
         for (int j = 0; j < map[i].size(); j++) {
-            if (map[i][j] == '*') {
-                if (checkSides(i, j, map) != -1) {
-                    mult = checkSides(i, j, map);
-                    ans += mult;
+            if (isdigit(map[i][j])) { 
+                curNum += map[i][j];
+                if (checkSides(i, j, map)) {
+                    touchingSymbol = true;
                     continue;
                 }
             }
-           
+            else if ( curNum != "") {
+                if(touchingSymbol) ans += stoi(curNum);
+                curNum = "";
+                touchingSymbol = false;
+            }
         }
     }
 
@@ -161,5 +133,5 @@ int main(int argc, char* argv[]) {
     cout << ans;
 
     input.close();
-  
+
 }

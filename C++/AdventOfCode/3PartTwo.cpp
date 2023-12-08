@@ -1,0 +1,98 @@
+#include <iostream>
+#include <fstream>
+#include <string>
+#include <algorithm>
+#include <vector>
+
+using namespace std;
+
+int checkSides(int i, int j, vector<string>& map) {
+
+    int found = 0;
+    int num1 = 0;
+    int num2 = 0;
+    int a = map.size();
+    for (int k = i - 1; k < a && k <= i + 1; k++) {
+        int b = map[i].size();
+
+        bool newNum = true;
+
+        for (int p = j - 1; p < b && p <= j + 1; p++) {
+            if (k == i && p == j) {
+                newNum = true;
+                continue;
+            }
+            if (k < 0 || p < 0) {
+                continue;
+            }
+            if (isdigit(map[k][p])) {
+                if (newNum) {
+                    found++;
+                    int m = p;
+                    int n = p;
+
+                    //find both ends of the number
+                    for (; m >= 0 && isdigit(map[k][m]); m--) {
+                    }
+                    for (; n <= map[k].size() && isdigit(map[k][n]); n++) {
+                    }
+
+                    //put in num 1 or num2
+                    (num1 == 0) ? num1 = stoi(map[k].substr(m + 1, n - m)) : num2 = stoi(map[k].substr(m + 1, n - m));
+
+                }
+                newNum = false;
+            }
+            else {
+                newNum = true;
+            }
+
+        }
+
+    }
+    if (found > 2) return -1;
+    if (found < 2) return -1;
+    return num1 * num2;
+}
+
+int main(int argc, char* argv[]) {
+    if (argc != 2) {
+        printf("Usage: %s <filename>\n", argv[0]);
+        exit(-1);
+    }
+    ifstream input(argv[1]);
+    string line;
+    int ans = 0;
+
+    vector<string> map;
+
+
+    if (!input.is_open()) {
+        cout << "Failed to open input file \n";
+        exit(-1);
+    }
+    while (getline(input, line)) {
+        map.push_back(line);
+    }
+
+    for (int i = 0; i < map.size(); i++) {
+        int mult = 0;
+        for (int j = 0; j < map[i].size(); j++) {
+            if (map[i][j] == '*') { //check all gears
+                if (checkSides(i, j, map) != -1) {
+                    mult = checkSides(i, j, map);
+                    ans += mult;
+                    continue;
+                }
+            }
+
+        }
+    }
+
+
+
+    cout << ans;
+
+    input.close();
+
+}
