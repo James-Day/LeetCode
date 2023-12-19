@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <regex>
+#include <queue>
 
 using namespace std;
 //UTIL
@@ -73,6 +74,26 @@ vector<vector<int>> transpose(vector<vector<int>>& matrix) {
 }
 //UTIL
 
+void floodFill(vector<vector<char>>& graph, int startI, int startJ, char fillChar, char charToBeFilled) {
+    queue<pair<int, int>> floodFillQueue;
+    floodFillQueue.push({startI, startJ});
+    while (!floodFillQueue.empty()) {
+        pair<int, int> ij = floodFillQueue.front();
+        floodFillQueue.pop();
+        int i = ij.first;
+        int j = ij.second;
+        if (i >= graph.size() || j >= graph[0].size()) continue;
+        if (graph[i][j] != charToBeFilled) continue;
+
+        graph[i][j] = fillChar;
+        floodFillQueue.push({ i + 1, j });
+        floodFillQueue.push({ i - 1, j });
+        floodFillQueue.push({ i, j + 1 });
+        floodFillQueue.push({ i, j - 1 });
+    }
+
+}
+
 
 int main(int argc, char* argv[]) {
     if (argc != 2) {
@@ -93,8 +114,8 @@ int main(int argc, char* argv[]) {
         vecInput.push_back(line);
     } 
     input.close();
-    vector<vector<char>> grid(1000, vector<char>(1000, '.')); //maybe consider starting in the middle of the array?
-    pair<int, int> curPos = { 500,500 };
+    vector<vector<char>> grid(750, vector<char>(750, '.')); //maybe consider starting in the middle of the array?
+    pair<int, int> curPos = { 250,250};
     for (int i = 0; i < vecInput.size(); i++) {
         vector<string> split = customSplit(vecInput[i], ' ');
         int movesLeft = stoi(split[1]);
@@ -119,7 +140,7 @@ int main(int argc, char* argv[]) {
                 movesLeft--;
             }
         }
-        else { // split == U
+        else { // split[0] == U
             while (movesLeft > 0) {
                 curPos.first--;
                 grid[curPos.first][curPos.second] = '#';
@@ -127,42 +148,11 @@ int main(int argc, char* argv[]) {
             }
         }
     }
+    floodFill(grid, 246, 246, '#', '.');
 
-    for (int i = 0; i < grid.size(); i++) { // my attempt at flood fill. obviously doesnt work.
-        for (int j = 0; j < grid[i].size(); j++) {
-            if (grid[i][j] == '#') {
-                break;
-            }
-            grid[i][j] = 'L';
-        }
-    }
-    for (int i = 0; i < grid[0].size(); i++) {
-        for (int j = 0; j < grid.size(); j++) {
-            if (grid[j][i] == '#') {
-                break;
-            }
-            grid[j][i] = 'L';
-        }
-    }
-    for (int i = 0; i < grid.size(); i++) {
-        for (int j = grid[i].size()-1; j >= 0 ; j--) {
-            if (grid[i][j] == '#') {
-                break;
-            }
-            grid[i][j] = 'L';
-        }
-    }
-    for (int i = grid.size() - 1; i >= 0; i--) {
-        for (int j = 0; j < grid.size(); j++) {
-            if (grid[i][j] == '#') {
-                break;
-            }
-            grid[i][j] = 'L';
-        }
-    }
     for (int i = 0; i < grid.size(); i++) {
         for (int j = 0; j < grid[i].size(); j++) {
-            if (grid[i][j] == '.' || grid[i][j] == '#') ans++;
+            if (grid[i][j] == '#') ans++;
         }
     }
     
