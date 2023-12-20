@@ -7,6 +7,7 @@
 #include <unordered_map>
 #include <unordered_set>
 #include <regex>
+#include <sstream>
 #include <queue>
 
 using namespace std;
@@ -74,25 +75,37 @@ vector<vector<int>> transpose(vector<vector<int>>& matrix) {
 }
 //UTIL
 
-void floodFill(vector<vector<char>>& graph, int startI, int startJ, char fillChar, char charToBeFilled) {
-    queue<pair<int, int>> floodFillQueue;
-    floodFillQueue.push({startI, startJ});
-    while (!floodFillQueue.empty()) {
-        pair<int, int> ij = floodFillQueue.front();
-        floodFillQueue.pop();
-        int i = ij.first;
-        int j = ij.second;
-        if (i >= graph.size() || j >= graph[0].size()) continue;
-        if (graph[i][j] != charToBeFilled) continue;
 
-        graph[i][j] = fillChar;
-        floodFillQueue.push({ i + 1, j });
-        floodFillQueue.push({ i - 1, j });
-        floodFillQueue.push({ i, j + 1 });
-        floodFillQueue.push({ i, j - 1 });
+//Towards the end I had some overflow issue, I believe it was with calculating the area, so i made everything long long, obviously this is not a good implementation, I'll come back and clean it up
+
+class Solver {
+public:
+    Solver() {
+        points.push_back({0,0}); //for now we need to start with this point.
+    }
+    void addInstruction(string direction, long long length) {
+        perimeter += length;
+        pair<long, long> move = directions[direction];
+        pos.first += (length * move.first);
+        pos.second += (length * move.second);
+        points.push_back(pos);
+    }
+    long long solve() {
+        long long area = 0;
+        for (int i = 0; i < points.size() - 1; i++) {
+            pair<long long , long long> pointOne = points[i];
+            pair<long long, long long> pointTwo = points[i + 1];
+            area += (pointOne.first * pointTwo.second) - (pointOne.second * pointTwo.first); // x1y2 - y1x2
+        }
+        return abs(area) / 2 + perimeter/2 + 1;
     }
 
-}
+private:
+    unordered_map<string, pair<long long , long long>> directions = { {"R", {0,1}}, {"L", {0,-1}}, {"U", {-1,0}}, {"D", {1,0}} };
+    vector<pair<long long , long long>> points;
+    pair<long long, long long> pos;
+    long long perimeter = 0;
+};
 
 
 int main(int argc, char* argv[]) {
@@ -114,47 +127,41 @@ int main(int argc, char* argv[]) {
         vecInput.push_back(line);
     } 
     input.close();
-    vector<vector<char>> grid(750, vector<char>(750, '.')); //maybe consider starting in the middle of the array?
-    pair<int, int> curPos = { 250,250};
+    
+    Solver solver1;
+    Solver solver2;
+
+    //PART #1
     for (int i = 0; i < vecInput.size(); i++) {
         vector<string> split = customSplit(vecInput[i], ' ');
-        int movesLeft = stoi(split[1]);
-        if (split[0] == "R") {
-            while (movesLeft > 0) {
-                curPos.second++;
-                grid[curPos.first][curPos.second] = '#';
-                movesLeft--;
-            }
-        }
-        else if (split[0] == "L") {
-            while (movesLeft > 0) {
-                curPos.second--;
-                grid[curPos.first][curPos.second] = '#';
-                movesLeft--;
-            }
-        }
-        else if (split[0] == "D") {
-            while (movesLeft > 0) {
-                curPos.first++;
-                grid[curPos.first][curPos.second] = '#';
-                movesLeft--;
-            }
-        }
-        else { // split[0] == U
-            while (movesLeft > 0) {
-                curPos.first--;
-                grid[curPos.first][curPos.second] = '#';
-                movesLeft--;
-            }
-        }
+        solver1.addInstruction(split[0], stoll (split[1]));
     }
-    floodFill(grid, 246, 246, '#', '.');
 
-    for (int i = 0; i < grid.size(); i++) {
-        for (int j = 0; j < grid[i].size(); j++) {
-            if (grid[i][j] == '#') ans++;
-        }
+    ans = solver1.solve();
+    cout << ans << endl;
+    ans = 0;
+
+    //PART #2
+    for (int i = 0; i < vecInput.size(); i++) {
+        vector<string> split = customSplit(vecInput[i], ' ');
+        long long directionNumber = split[2][7] - '0';
+        stringstream stream ;
+        long long convertedLength = 0;
+        string length = split[2].substr(2, 5);
+        stream << length;
+        stream >> std::hex >> convertedLength;
+
+        string direction = "";
+        if (directionNumber == 0) direction = "R";
+        else if (directionNumber == 1) direction = "D";
+        else if (directionNumber == 2) direction = "L";
+        else if (directionNumber == 3) direction = "U";
+
+
+        solver2.addInstruction(direction, convertedLength);
     }
+    ans = solver2.solve();
+
     
     cout << ans;
 
