@@ -23,3 +23,22 @@ public:
         return true;
     }
 };
+/*
+essentially same solution O(N) time, O(N) Space
+class Solution {
+public:
+    bool isIsomorphic(string s, string t) {
+        if(s.size() != t.size()) return false;
+        unordered_map<char, char> mapping;
+        unordered_map<char, char> backwardsMapping;
+        for(int i = 0; i < s.size(); i++){
+            if(mapping.contains(s[i]) && mapping[s[i]] != t[i]) return false;
+            if(backwardsMapping.contains(t[i]) && backwardsMapping[t[i]] != s[i]) return false;
+
+            mapping[s[i]] = t[i];
+            backwardsMapping[t[i]] = s[i];
+        }
+        return true;
+    }
+};
+*/
