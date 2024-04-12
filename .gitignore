@@ -1,4 +1,3 @@
-
 C++/.vs/C++/FileContentIndex/d9d3101c-6454-48fb-ad5b-6987cd7faf05.vsidx
 C++/.vs/VSWorkspaceState.json
 C++/.vs/slnx.sqlite
@@ -23,3 +22,4 @@ C++/.vs/C++/v17/ipch/AutoPCH/4ad42fe6a0a34818/VALIDATE BINARY SEARCH TREE.ipch
 C++/.vs/C++/v17/ipch/AutoPCH/7f97d9c841fda447/IS SUBSEQUENCE.ipch
 *.ipch
 C++/.vs/C++/v17/ipch/AutoPCH/b0e5ad3f56414481/DIAMETER OF BINARY TREE.ipch
+*.vs
