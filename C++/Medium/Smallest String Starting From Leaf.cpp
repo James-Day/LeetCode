@@ -32,7 +32,7 @@ public:
     }
 };
 
-/* My initial solution, much worse because it uses nlog(n) memory where n is the number of characters. and then sorts at the end.
+/* My initial solution, much worse because it uses nlog(n) memory where n is the number of characters. and then sorts at the end which is also a bit slower time complexity wise.
 * 
 * /**
  * Definition for a binary tree node.
