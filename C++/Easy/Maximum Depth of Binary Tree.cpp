@@ -21,3 +21,6 @@ public:
         return max(l, r) + 1;
     }
 };
+
+// One Liner
+// return !root ? 0: 1 + max(maxDepth(root->left), maxDepth(root->right));
