@@ -1,25 +1,25 @@
 class Solution {
 public:
     int numIslands(vector<vector<char>>& grid) {
-        int islands = 0;
+        int ans = 0;
         for (int i = 0; i < grid.size(); i++) {
             for (int j = 0; j < grid[i].size(); j++) {
-                if (grid[i][j] == '1') {
-                    floodFill(i, j, grid);
-                    islands++;
+                if (grid[i][j] != '1') {
+                    continue;
                 }
+                floodFill(grid, i, j);
+                ans++;
             }
         }
-        return islands;
+        return ans;
     }
-    void floodFill(int i, int j, vector<vector<char>>& grid) {
-        if (i >= grid.size() || i < 0 || j < 0 || j >= grid[i].size()) return; //boundary check
+    void floodFill(vector<vector<char>>& grid, int i, int j) {
+        if (i < 0 || i >= grid.size() || j < 0 || j >= grid[i].size()) return;
         if (grid[i][j] != '1') return;
-        grid[i][j] = 'v'; //for visited
-
-        floodFill(i + 1, j, grid);
-        floodFill(i - 1, j, grid);
-        floodFill(i, j + 1, grid);
-        floodFill(i, j - 1, grid);
+        grid[i][j] = 0;
+        floodFill(grid, i + 1, j);
+        floodFill(grid, i - 1, j);
+        floodFill(grid, i, j + 1);
+        floodFill(grid, i, j - 1);
     }
 };
