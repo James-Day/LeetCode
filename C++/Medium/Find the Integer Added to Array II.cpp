@@ -1,3 +1,31 @@
+//O(NLogN)
+class Solution {
+public:
+    int minimumAddedInteger(vector<int>& nums1, vector<int>& nums2) {
+        sort(nums1.begin(), nums1.end());
+        sort(nums2.begin(), nums2.end());
+        int mini = INT_MAX;
+        for (int i = 0; i < 3; i++) { //ans must be one of first 3 since only 2 can be missing.
+            int x = nums2[0] - nums1[i];
+            if (check(nums1, nums2, x)) { //since it's sorted it must be one of the first 3
+                mini = min(mini, x);
+            }
+        }
+        return mini;
+    }
+    bool check(vector<int>& nums1, vector<int>& nums2, int k) {
+        int count = 0, j = 0;
+        for (int i = 0; i < nums1.size() && j < nums2.size(); i++) {
+            if (nums1[i] + k != nums2[j])
+                count++;
+            else
+                j++;
+        }
+        if (count > 2) //if more than 2 skips then this is not the answer.
+            return false;
+        return true;
+    }
+};
 //O(N^3) Not optimal, but this was my initial solution for contest.
 class Solution {
 public:
