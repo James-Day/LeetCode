@@ -1,28 +1,26 @@
 class Solution {
 public:
-    double mincostToHireWorkers(vector<int>& quality, vector<int>& wage, int K) {
-        int N = quality.size();
-        vector<pair<double, int>>vec; // ratio, quality
-        for (int i = 0; i < N; i++) {
-            vec.push_back({ wage[i] * 1.0 / quality[i], quality[i] });
+    double mincostToHireWorkers(vector<int>& quality, vector<int>& wage, int k) {
+        int n = quality.size();
+        vector<pair<double, int>> ratios; // ratio, quality
+        for (int i = 0; i < n; i++) {
+            ratios.push_back({ (double)wage[i] / quality[i], quality[i] });
         }
-        // sort in ascending order
-        sort(vec.begin(), vec.end(), [](auto& a, auto& b) {
-            return a.first < b.first;
-            });
-        int quality_cnt = 0;
-        priority_queue<int> q; // max-min heap
-        for (int i = 0; i < K; i++) {
-            quality_cnt += vec[i].second;
-            q.push(vec[i].second);
+        sort(ratios.begin(), ratios.end());
+
+        priority_queue<int> pq;
+        int totalQuality = 0;
+        for (int i = 0; i < k; i++) {
+            pq.push(ratios[i].second);
+            totalQuality += ratios[i].second;
         }
-        double ans = quality_cnt * vec[K - 1].first;
-        for (int i = K; i < N; i++) {
-            q.push(vec[i].second);
-            quality_cnt += vec[i].second;
-            quality_cnt -= q.top();
-            q.pop();
-            ans = min(ans, quality_cnt * vec[i].first);
+        double ans = ratios[k - 1].first * totalQuality;
+        for (int i = k; i < n; i++) {
+            pq.push(ratios[i].second);
+            totalQuality -= pq.top();
+            totalQuality += ratios[i].second;
+            pq.pop();
+            ans = min(ans, totalQuality * ratios[i].first);
         }
         return ans;
     }
