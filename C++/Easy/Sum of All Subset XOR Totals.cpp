@@ -21,3 +21,16 @@ public:
         return sum;
     }
 };
+
+// Better memory.
+class Solution {
+public:
+    int subsetXORSum(vector<int>& nums) {
+        int total = 0;
+        return dfs(0, total, nums);
+    }
+    int dfs(int i, int total, vector<int>& nums) {
+        if (i == nums.size()) return total;
+        return dfs(i + 1, total ^ nums[i], nums) + dfs(i + 1, total, nums);
+    }
+};
