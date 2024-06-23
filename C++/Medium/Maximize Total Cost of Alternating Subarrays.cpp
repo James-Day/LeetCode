@@ -1,19 +1,14 @@
 class Solution {
 public:
     long long maximumTotalCost(vector<int>& nums) {
-        long long res = nums[0], cur = 0, prev = 0;
+        std::vector<long long> ret = { nums[0], LLONG_MIN };
+
         for (int i = 1; i < nums.size(); ++i) {
-            res += nums[i];
-            if (nums[i] >= 0) {
-                res += 2 * max(cur, prev);
-                cur = prev = 0;
-            }
-            else {
-                long long temp = cur;
-                cur = prev - nums[i];
-                prev = max(temp, prev);
-            }
+            long long a = max(ret[0], ret[1]) + nums[i];
+            long long b = ret[0] - nums[i];
+            ret = { a, b };
         }
-        return res + 2 * max(cur, prev);
+
+        return max(ret[0], ret[1]);
     }
 };
