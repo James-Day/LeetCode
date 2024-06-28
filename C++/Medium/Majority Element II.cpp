@@ -3,33 +3,45 @@
 using namespace std;
 class Solution {
 public:
-    vector<int> majorityElement(vector<int>& nums) {
-        unordered_map<int, int> count;
+	vector<int> majorityElement(vector<int>& a)
+	{
+		int y, z, countY = 0, countZ = 0;
+		for (const auto& x : a)
+		{
+			if (x == y) countY++;
+			else if (x == z) countZ++;
+			else if (!countY) y = x, countY = 1;
+			else if (!countZ) z = x, countZ = 1;
+			else countY--, countZ--;
+		}
 
-        for (int i = 0; i < nums.size(); i++) {
-            count[nums[i]]++;
-            if (count.size() > 2) {
-                unordered_map<int, int> newMap;
-                for (auto j = count.begin(); j != count.end(); j++) {
-                    if (j->second - 1 != 0) {
-                        newMap.insert({ j->first, j->second - 1 });
-                    }
-                }
-                count = newMap;
-            }
-        }
-        vector<int> ans;
-        for (auto i = count.begin(); i != count.end(); i++) {
-            int realCount = 0;
-            for (int j = 0; j < nums.size(); j++) {
-                if (nums[j] == i->first) {
-                    realCount++;
-                }
-            }
-            if (realCount > nums.size() / 3) {
-                ans.push_back(i->first);
-            }
-        }
-        return ans;
-    }
+		countY = countZ = 0;
+		for (const auto& x : a) //count the 2 candidates
+			if (x == y) countY++;
+			else if (x == z) countZ++;
+
+		vector<int> r;
+		if (countY > size(a) / 3) r.push_back(y); //add candidates if they appear > n/3 times
+		if (countZ > size(a) / 3) r.push_back(z); //add candidates if they appear > n/3 times
+		return r;
+	}
+};
+
+// Worse solution: O(N) space complexity 
+
+class Solution {
+public:
+	vector<int> majorityElement(vector<int>& nums) {
+		unordered_map<int, int> count;
+		for (int i = 0; i < nums.size(); i++) {
+			count[nums[i]]++;
+		}
+		vector<int> ans;
+		for (auto i = count.begin(); i != count.end(); i++) {
+			if (i->second > nums.size() / 3) {
+				ans.push_back(i->first);
+			}
+		}
+		return ans;
+	}
 };
