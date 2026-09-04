@@ -4,7 +4,7 @@
 #include <climits>
 using namespace std;
 
-// O(n) index-building solution
+// O(n) index-building solution - precomputes min/max indices in a single pass
 class Solution {
 public:
     int countPalindromicSubsequence(string s) {
