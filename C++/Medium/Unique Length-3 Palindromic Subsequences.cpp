@@ -33,46 +33,35 @@ public:
     }
 };
 
-// O(26*n) scan solution - worse due to repeated full-string scans per character
+// worse because of the use of a set for chars
 /*
 class Solution {
 public:
     int countPalindromicSubsequence(string s) {
         int ans = 0;
+        vector<int> maxInd(26, INT_MIN);
+        vector<int> minInd(26, INT_MAX);
 
-        for (char ch = 'a'; ch <= 'z'; ch++) {
-
-            int first = -1;
-            int last = -1;
-
-            // Find first and last occurrence
-            for (int i = 0; i < s.size(); i++) {
-                if (s[i] == ch) {
-                    if (first == -1)
-                        first = i;
-
-                    last = i;
-                }
-            }
-
-            // Character doesn't occur at least twice
-            if (first == -1 || first == last)
-                continue;
-
-            // Count unique characters between first and last
-            bool seen[26] = {false};
-
-            for (int i = first + 1; i < last; i++) {
-                seen[s[i] - 'a'] = true;
-            }
-
-            for (int i = 0; i < 26; i++) {
-                if (seen[i])
-                    ans++;
-            }
+        for(int i = 0; i < s.size(); i++){
+            int charIndex = s[i] - 'a';
+            maxInd[charIndex] = max(maxInd[charIndex], i);
+            minInd[charIndex] = min(minInd[charIndex], i);
         }
+        
+        unordered_set<char> uniqueCharsBetween;
 
+        for(int i = 0; i < 26; i++){
+            //if the char isnt in string twice skip
+            if(maxInd[i] == INT_MIN || minInd[i] == INT_MAX) continue; 
+            for(int j = minInd[i] + 1; j < maxInd[i]; j++){
+                uniqueCharsBetween.insert(s[j]);
+            }
+            ans += uniqueCharsBetween.size();
+            uniqueCharsBetween.clear();
+
+        }
         return ans;
     }
 };
+
 */
